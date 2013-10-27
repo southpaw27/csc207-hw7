@@ -247,7 +247,10 @@ class DoublyLinkedListCursor<T> implements Cursor {
     /**
      * Create a new cursor that points to a node.
      */
-    public DoublyLinkedListCursor(Node<T> pos) {
+    public DoublyLinkedListCursor(Node<T> pos) { 
+    	/*
+    	 *Our lives would be a LOT easier if this took an iterator-- did Sam give us this code??????
+    	 */
         this.pos = pos;
     } // DoublyLinkedListCursor
 } // DoublyLinkedListCursor<T>
