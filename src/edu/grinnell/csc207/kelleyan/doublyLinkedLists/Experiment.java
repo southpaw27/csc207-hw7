@@ -32,16 +32,35 @@ public class Experiment {
          numbers.prepend(42);
          numbers.prepend(77);
          numbers.prepend(11);
-         DoublyLinkedListIterator<Integer> ni = new DoublyLinkedListIterator<Integer>(numbers);
-         numbers.printList(ni);
-         DoublyLinkedListCursor<Integer> nCurs= new DoublyLinkedListCursor<Integer>(ni.next());
-         printList(pen, numbers);
+         
+         //printList(pen, numbers);
 
          // Append a few elements
          numbers.append(1);
          numbers.append(2);
          numbers.append(3);
+         //printList(pen, numbers);
+         
+         DoublyLinkedListIterator<Integer> ni = new DoublyLinkedListIterator<Integer>(numbers);
+         
+         ni.next();
+         DoublyLinkedListCursor<Integer> nCurs1= new DoublyLinkedListCursor<Integer>(ni.pos);
+         pen.println(numbers.get(nCurs1).toString());
+         
          printList(pen, numbers);
+         numbers.insert(new Integer(99), nCurs1);
+         printList(pen, numbers);
+         ni.next();
+         
+         DoublyLinkedListCursor<Integer> nCurs2= new DoublyLinkedListCursor<Integer>(ni.pos);
+         
+         printList(pen, (DoublyLinkedList<Integer>) numbers.subList(nCurs1, nCurs2));
+//         numbers.advance(nCurs1);
+//         pen.println(numbers.get(nCurs1));
+//         pen.println(numbers.get(nCurs2).toString());
+//         numbers.delete(nCurs2);
+ //        numbers.swap(nCurs1, nCurs2);
+//         printList(pen, numbers);
          // And we're done
          pen.close();
      } // main(String[])

@@ -70,10 +70,13 @@ public class DoublyLinkedList<T> implements ListOf<T> {
     		this.front = this.dummy.next;
     		this.back = this.front;
     	}else{
-    		dllc.pos.prev.next = new Node<T>(val);
-    		dllc.pos.prev = dllc.pos.prev.next;
-    		dllc.pos.prev.next.next = dllc.pos;
-    		dllc.pos.prev.next.prev = dllc.pos.prev;
+    		Node<T> temp = dllc.pos;
+    		Node<T> newNode = new Node<T>(val);
+    		newNode.next = temp.next;
+    		newNode.prev = dllc.pos;
+    		
+    		dllc.pos.next.prev = newNode;
+    		dllc.pos.next = newNode;
     	}
     } // insert(T, Cursor)
 
@@ -124,7 +127,7 @@ public class DoublyLinkedList<T> implements ListOf<T> {
     } // delete(Cursor)
 
     public Cursor front() throws Exception {
-        return new DoublyLinkedListCursor<T>(this.dummy);
+        return new DoublyLinkedListCursor<T>(this.front);
     } // front()
 //maybe we need to check for the next element's existence??????
     public void advance(Cursor c) throws Exception {
@@ -178,15 +181,30 @@ public class DoublyLinkedList<T> implements ListOf<T> {
     public void swap(Cursor c1, Cursor c2) throws Exception {
     	DoublyLinkedListCursor<T> dllc = (DoublyLinkedListCursor<T>) c1;
     	DoublyLinkedListCursor<T> dllc2 = (DoublyLinkedListCursor<T>) c2;
-    	switchBothPointers(dllc.pos, dllc2.pos, "prev");
-    	switchBothPointers(dllc.pos, dllc2.pos, "next");
-    	   	
+    	//store the positions of the nodes to be changed pointers
+    	Node<T> temp1 = dllc.pos;
+    	Node<T> temp2 = dllc2.pos;
+    	
+    	Cursor tempc1 = c1;
+    	Cursor tempc2 = c2;
+    	this.retreat(tempc1);
+    	this.retreat(tempc2);
+    	System.out.println(this.get(tempc1));
+    	System.out.println(this.get(tempc2));
+    	this.delete(c1);
+    	this.delete(c2);
+    	
+    	this.insert(temp1.val, tempc2);
+    	this.insert(temp2.val, tempc1);
+    	
     } // swap(Cursor, Cursor)
+    //helper function
+    //switches two pointers to change a complete connection: 
+    //if prevOrNext == prev, switches the node1 prev
     private void switchBothPointers(Node<T> node1, Node<T> node2, String prevOrNext){
     	Node<T> temp = node1;
     	if (prevOrNext.equals("prev")){
     		node1.prev = node2.prev;
-    		node2.prev = temp.prev;
     		node1.prev.next = node2.prev.next;
     		node2.prev.next = temp.prev.next;
     	}else {
@@ -196,28 +214,46 @@ public class DoublyLinkedList<T> implements ListOf<T> {
     		node2.next.prev = temp.next.prev;
     	}
     }
+    
     public boolean search(Cursor c, Predicate<T> pred) throws Exception {
         throw new UnsupportedOperationException("STUB");
     } // search(Cursor, Predicate<T>)
-     
+    
+    //some questions on????????
     public ListOf<T> select(Predicate<T> pred) throws Exception {
-        throw new UnsupportedOperationException("STUB");
+    	DoublyLinkedListIterator<T> it = new DoublyLinkedListIterator<T>(this);
+    	DoublyLinkedList<T> sel = new DoublyLinkedList<T>();
+    	
+    	if (it.hasNext()){
+    		<T> test = it.next(); //how do we???????
+    		if (pred((it.next()){ //how are we supposed to use pred???????
+    			sel.append()
+    		}
+    	}
     } // select(Predicate<T>)
      
+    //one test done, pretty sure it works
     public ListOf<T> subList(Cursor start, Cursor end) throws Exception {
-        throw new UnsupportedOperationException("STUB");
+        DoublyLinkedList<T> sub = new DoublyLinkedList<T>();
+        
+        DoublyLinkedListCursor<T> dllc = (DoublyLinkedListCursor<T>) start;
+    	DoublyLinkedListCursor<T> dllc2 = (DoublyLinkedListCursor<T>) end;
+    	
+        sub.front = dllc.pos;
+        sub.back = dllc2.pos;
+        
+        sub.front.prev = sub.dummy;
+        sub.dummy.next = sub.front;
+        
+        sub.back.next = null;
+        
+        return sub;
     } // subList(Cursor, Cursor)
 
     public boolean precedes(Cursor c1, Cursor c2) throws Exception {
         throw new UnsupportedOperationException("STUB");
     } // precedes(Cursor, Cursor)
     
-    public void printList(PrintWriter pen){
-    	DoublyLinkedListIterator<T> it = new DoublyLinkedListIterator<T>(this);
-    	while (it.hasNext()){
-    		pen.println(it.next());
-    	}
-    }
 } // class DoublyLinkedList
 
 /**
