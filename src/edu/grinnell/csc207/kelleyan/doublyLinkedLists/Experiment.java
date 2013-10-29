@@ -85,7 +85,9 @@ public class Experiment {
          DoublyLinkedListCursor<Integer> nCurs4 = nCurs2;
          pen.println(numbers.search(nCurs2, new Equals<Integer>(new Integer(42))));
 
-         pen.println(numbers.precedes(nCurs4, nCurs3));
+         pen.println(numbers.precedes(nCurs3, nCurs4));
+         DoublyLinkedListCursor<Integer> nCurs5 = new DoublyLinkedListCursor<Integer>(numbers.back);
+         pen.println(numbers.precedes(nCurs5, nCurs3));
          // And we're done
          pen.close();
      } // main(String[])

@@ -184,6 +184,7 @@ public class DoublyLinkedList<T> implements ListOf<T> {
     
     public boolean search(Cursor c, Predicate<T> pred) throws Exception {
     	DoublyLinkedListCursor<T> dllc = (DoublyLinkedListCursor<T>) c;
+    	DoublyLinkedListCursor<T> temp = dllc;
     	do {
     		if (pred.test(this.get(c))) {
     			return true;
@@ -194,7 +195,8 @@ public class DoublyLinkedList<T> implements ListOf<T> {
     	if (pred.test(this.get(c))) {
     		return true;
     	} else {
-    	return false;
+    		dllc = temp;
+    		return false;
     	}
     } // search(Cursor, Predicate<T>)
     
@@ -232,16 +234,15 @@ public class DoublyLinkedList<T> implements ListOf<T> {
     public boolean precedes(Cursor c1, Cursor c2) throws Exception {
     	DoublyLinkedListCursor<T> dllc = (DoublyLinkedListCursor<T>) c1;
     	DoublyLinkedListCursor<T> dllc2 = (DoublyLinkedListCursor<T>) c2;
-    	Predicate<T> equalsc1 = new Equals<T>(dllc.pos.val);
-    	
-    	while (!equalsc1.test(dllc2.pos.val)) {
-    		if (dllc2.pos == this.dummy) {
-    			return false;
+    	Predicate<Node<T>> equalsc1 = new Equals<Node<T>>(dllc.pos);
+    	while (this.hasPrev(dllc2)) {
+    		if (equalsc1.test(dllc2.pos)) {
+    			return true;
     		} else {
     			this.retreat(dllc2);
     		} // else
     	} // while
-    	return true;
+    	return false;
     } // precedes(Cursor, Cursor)
     
 } // class DoublyLinkedList
