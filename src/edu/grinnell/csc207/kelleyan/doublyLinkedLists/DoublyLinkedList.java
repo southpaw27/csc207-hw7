@@ -45,14 +45,14 @@ public class DoublyLinkedList<T> implements ListOf<T> {
     	this.dummy = new Node(null);
     	this.front = dummy;
     	this.back = dummy;
-    	//mutations needed?
+    	// mutations needed?
     	
     } // DoublyLinkedList
 
-    //Internal methods
+    // Internal methods
     boolean isEmpty() {
     	return (this.front == this.dummy);
-    } // isEmpty
+    } // isEmpty()
     
     // ITERABLE METHODS
     @Override
@@ -63,7 +63,7 @@ public class DoublyLinkedList<T> implements ListOf<T> {
     // LISTOF METHODS
     public void insert(T val, Cursor c) throws Exception {
     	DoublyLinkedListCursor<T> dllc = (DoublyLinkedListCursor<T>) c;
-    	//Special case: Empty list ///how do we check if the cursor is valid??????
+    	// Special case: Empty list /// how do we check if the cursor is valid??????
     	if (this.isEmpty()){
     		this.dummy.next = new Node<T>(val);
     		this.dummy.next.prev = this.dummy;
@@ -72,16 +72,17 @@ public class DoublyLinkedList<T> implements ListOf<T> {
     	}else{
     		Node<T> temp = dllc.pos;
     		Node<T> newNode = new Node<T>(val);
-    		newNode.next = temp.next;
-    		newNode.prev = dllc.pos;
+    		newNode.next = dllc.pos;
+    		newNode.prev = dllc.pos.prev;
+
     		
-    		dllc.pos.next.prev = newNode;
-    		dllc.pos.next = newNode;
-    	}
+    		dllc.pos.prev.next = newNode;
+    		dllc.pos.prev = newNode;
+    	} //// When checking these look forwards and backwards
     } // insert(T, Cursor)
 
     public void append(T val) throws Exception {
-    	// Special case: Empty list //aren't we supposed to leave the dummy node as front? or not? i
+    	// Special case: Empty list 
         if (this.isEmpty()) {
         	this.front = new Node<T>(val);
         	this.back = this.front;
@@ -91,7 +92,7 @@ public class DoublyLinkedList<T> implements ListOf<T> {
         // Normal case: Nonempty list
         else {
         	this.back.next = new Node<T>(val);
-        	this.back.next.prev = this.back.next;
+        	this.back.next.prev = this.back;
         	this.back = this.back.next;
         }
     } // append(T)
@@ -104,12 +105,13 @@ public class DoublyLinkedList<T> implements ListOf<T> {
     		this.dummy.next = this.front;
     		this.front.prev = this.dummy;
     	}
-    	//Normal case: Nonempty list
+    	// Normal case: Nonempty list
     	else {
     		this.front.prev = new Node<T>(val);
     		this.front.prev.next = this.front;
     		this.front = this.front.prev;
     		this.dummy.next = this.front;
+    		this.front.prev = this.dummy;
     	}
     } // prepend(T)
 
@@ -129,7 +131,8 @@ public class DoublyLinkedList<T> implements ListOf<T> {
     public Cursor front() throws Exception {
         return new DoublyLinkedListCursor<T>(this.front);
     } // front()
-//maybe we need to check for the next element's existence??????
+// maybe we need to check for the next element's existence??????
+    
     public void advance(Cursor c) throws Exception {
     	
     	DoublyLinkedListCursor<T> dllc = (DoublyLinkedListCursor<T>) c;
@@ -141,10 +144,10 @@ public class DoublyLinkedList<T> implements ListOf<T> {
     } // advance(Cursor)
 //
     public void retreat(Cursor c) throws Exception {
-    	
     	DoublyLinkedListCursor<T> dllc = (DoublyLinkedListCursor<T>) c;
     	if (hasPrev(dllc)){
     		dllc.pos = dllc.pos.prev;
+    		
         }else{ 
         	throw new NoSuchElementException("first element in list");
         }
@@ -153,7 +156,7 @@ public class DoublyLinkedList<T> implements ListOf<T> {
     public T get(Cursor c) throws Exception {
     	DoublyLinkedListCursor<T> dllc = (DoublyLinkedListCursor<T>) c;
     	return dllc.pos.val;
-    } // get
+    } // get(Cursor)
 
     public T getPrev(Cursor c) throws Exception {
     	DoublyLinkedListCursor<T> dllc = (DoublyLinkedListCursor<T>) c;
@@ -163,76 +166,52 @@ public class DoublyLinkedList<T> implements ListOf<T> {
 
     public boolean hasNext(Cursor c) {
     	DoublyLinkedListCursor<T> dllc = (DoublyLinkedListCursor<T>) c;
-        return (dllc.pos.next.val != null);
-    } // hasNext
+        return (dllc.pos.next != null);
+    } // hasNext(Cursor)
 
     public boolean hasPrev(Cursor c) {
     	DoublyLinkedListCursor<T> dllc = (DoublyLinkedListCursor<T>) c;
-        return (dllc.pos.next.val != null);
-    } // hasPrev
+        return (dllc.pos.prev != this.dummy);
+    } // hasPrev(Cursor)
 
-    //
-    //THIS IS NOT COMPLETE! I got confused because it's 1:30 and I need
-    //to get off the computer...are we just switching the cursors to a new
-    //position, or are we switching the nodes the cursors are pointing to?
-    //M: we should be switching the next and prev fields in the nodes
-    // and yes, it is ugly
-    //
     public void swap(Cursor c1, Cursor c2) throws Exception {
     	DoublyLinkedListCursor<T> dllc = (DoublyLinkedListCursor<T>) c1;
     	DoublyLinkedListCursor<T> dllc2 = (DoublyLinkedListCursor<T>) c2;
-    	//store the positions of the nodes to be changed pointers
-    	Node<T> temp1 = dllc.pos;
-    	Node<T> temp2 = dllc2.pos;
-    	
-    	Cursor tempc1 = c1;
-    	Cursor tempc2 = c2;
-    	this.retreat(tempc1);
-    	this.retreat(tempc2);
-    	System.out.println(this.get(tempc1));
-    	System.out.println(this.get(tempc2));
-    	this.delete(c1);
-    	this.delete(c2);
-    	
-    	this.insert(temp1.val, tempc2);
-    	this.insert(temp2.val, tempc1);
-    	
+    	T val = dllc.pos.val;
+    	dllc.pos.val = dllc2.pos.val;
+    	dllc2.pos.val = val; 
     } // swap(Cursor, Cursor)
-    //helper function
-    //switches two pointers to change a complete connection: 
-    //if prevOrNext == prev, switches the node1 prev
-    private void switchBothPointers(Node<T> node1, Node<T> node2, String prevOrNext){
-    	Node<T> temp = node1;
-    	if (prevOrNext.equals("prev")){
-    		node1.prev = node2.prev;
-    		node1.prev.next = node2.prev.next;
-    		node2.prev.next = temp.prev.next;
-    	}else {
-    		node1.next = node2.next;
-    		node2.next = temp.next;
-    		node1.next.prev = node2.next.prev;
-    		node2.next.prev = temp.next.prev;
-    	}
-    }
     
     public boolean search(Cursor c, Predicate<T> pred) throws Exception {
-        throw new UnsupportedOperationException("STUB");
+    	DoublyLinkedListCursor<T> dllc = (DoublyLinkedListCursor<T>) c;
+    	do {
+    		if (pred.test(this.get(c))) {
+    			return true;
+    		} else {
+    			this.advance(dllc);
+    		}
+    	} while (this.hasNext(dllc)); // do while
+    	if (pred.test(this.get(c))) {
+    		return true;
+    	} else {
+    	return false;
+    	}
     } // search(Cursor, Predicate<T>)
     
-    //some questions on????????
     public ListOf<T> select(Predicate<T> pred) throws Exception {
     	DoublyLinkedListIterator<T> it = new DoublyLinkedListIterator<T>(this);
     	DoublyLinkedList<T> sel = new DoublyLinkedList<T>();
-    	
-    	if (it.hasNext()){
-    		<T> test = it.next(); //how do we???????
-    		if (pred((it.next()){ //how are we supposed to use pred???????
-    			sel.append()
+
+    	while (it.hasNext()) {
+    		T test = it.next(); 
+    		if (pred.test(test)) { 
+    			sel.append(test);
     		}
     	}
+    	return sel;
     } // select(Predicate<T>)
      
-    //one test done, pretty sure it works
+    // one test done, pretty sure it works
     public ListOf<T> subList(Cursor start, Cursor end) throws Exception {
         DoublyLinkedList<T> sub = new DoublyLinkedList<T>();
         
@@ -251,7 +230,18 @@ public class DoublyLinkedList<T> implements ListOf<T> {
     } // subList(Cursor, Cursor)
 
     public boolean precedes(Cursor c1, Cursor c2) throws Exception {
-        throw new UnsupportedOperationException("STUB");
+    	DoublyLinkedListCursor<T> dllc = (DoublyLinkedListCursor<T>) c1;
+    	DoublyLinkedListCursor<T> dllc2 = (DoublyLinkedListCursor<T>) c2;
+    	Predicate<T> equalsc1 = new Equals<T>(dllc.pos.val);
+    	
+    	while (!equalsc1.test(dllc2.pos.val)) {
+    		if (dllc2.pos == this.dummy) {
+    			return false;
+    		} else {
+    			this.retreat(dllc2);
+    		} // else
+    	} // while
+    	return true;
     } // precedes(Cursor, Cursor)
     
 } // class DoublyLinkedList
@@ -284,9 +274,6 @@ class DoublyLinkedListCursor<T> implements Cursor {
      * Create a new cursor that points to a node.
      */
     public DoublyLinkedListCursor(Node<T> pos) { 
-    	/*
-    	 *Our lives would be a LOT easier if this took an iterator-- did Sam give us this code??????
-    	 */
         this.pos = pos;
     } // DoublyLinkedListCursor
 } // DoublyLinkedListCursor<T>

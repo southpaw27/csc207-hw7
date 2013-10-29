@@ -18,7 +18,20 @@ public class Experiment {
          } // for
          pen.println();
          pen.flush();
-     } // printList(PrintWriter, LinkedList<Object>)
+     } // printList(PrintWriter, LinkedList<T>)
+     
+     public static <T> void printListReverse (PrintWriter pen,
+    		         DoublyLinkedList<T> list) throws Exception {
+    	 DoublyLinkedListCursor<T> c = new DoublyLinkedListCursor<T>(list.back);
+    	 pen.print(list.get(c));
+    	 pen.print(" ");
+    	 while(list.hasPrev(c)) {
+    		 pen.print(list.getPrev(c));
+    		 pen.print(" ");
+    	 } // for
+    	 pen.println();
+    	 pen.flush();
+     } // printList(PrintWriter, LinkedList<T>)
 
      public static void main(String[] args) throws Exception {
          // Set up output
@@ -45,22 +58,34 @@ public class Experiment {
          
          ni.next();
          DoublyLinkedListCursor<Integer> nCurs1= new DoublyLinkedListCursor<Integer>(ni.pos);
+         pen.println("Here is cursor1");
          pen.println(numbers.get(nCurs1).toString());
          
-         printList(pen, numbers);
+         //printList(pen, numbers);
          numbers.insert(new Integer(99), nCurs1);
          printList(pen, numbers);
+         printListReverse(pen, numbers);
          ni.next();
          
          DoublyLinkedListCursor<Integer> nCurs2= new DoublyLinkedListCursor<Integer>(ni.pos);
          
-         printList(pen, (DoublyLinkedList<Integer>) numbers.subList(nCurs1, nCurs2));
-//         numbers.advance(nCurs1);
-//         pen.println(numbers.get(nCurs1));
-//         pen.println(numbers.get(nCurs2).toString());
-//         numbers.delete(nCurs2);
- //        numbers.swap(nCurs1, nCurs2);
-//         printList(pen, numbers);
+         //printList(pen, (DoublyLinkedList<Integer>) numbers.subList(nCurs1, nCurs2));
+         pen.println("to be swapped: " + numbers.get(nCurs1) );
+         pen.println(numbers.get(nCurs2));
+         //numbers.delete(nCurs2);
+         numbers.swap(nCurs1, nCurs2);
+         printList(pen, numbers);
+         printListReverse(pen, numbers);
+         numbers.append(42);
+         printList(pen, (DoublyLinkedList)numbers.select(new Equals<Integer>(new Integer(42))));
+         printList(pen, numbers);
+         pen.println(numbers.get(nCurs1));
+         pen.println(numbers.get(nCurs2));
+         DoublyLinkedListCursor<Integer> nCurs3 = nCurs1;
+         DoublyLinkedListCursor<Integer> nCurs4 = nCurs2;
+         pen.println(numbers.search(nCurs2, new Equals<Integer>(new Integer(42))));
+
+         pen.println(numbers.precedes(nCurs4, nCurs3));
          // And we're done
          pen.close();
      } // main(String[])
