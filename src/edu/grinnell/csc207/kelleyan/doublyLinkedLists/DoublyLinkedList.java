@@ -284,16 +284,12 @@ class DoublyLinkedListCursor<T> implements Cursor {
  */
 class DoublyLinkedListIterator<T> implements Iterator<T> {
     Node<T> pos;
-    Node<T> prev;
-    DoublyLinkedList<T> list;
 
     /**
      * Create a new iterator at the front of the list.
      */
     public DoublyLinkedListIterator(DoublyLinkedList<T> list) {
         this.pos = list.front;
-        this.prev = null;
-        this.list = list;
     } // LinkedListIterator(Node<T>)
 
     public T next() throws NoSuchElementException {
@@ -310,17 +306,17 @@ class DoublyLinkedListIterator<T> implements Iterator<T> {
     } // hasNext()
 
     public T previous() throws NoSuchElementException {
-    	if (this.prev == null) {
+    	if (this.pos.prev == null) {
     		throw new NoSuchElementException("at beginning of list");
     	}
-    	T val = this.prev.val;
-    	this.prev = this.prev.prev;
-    	this.pos = this.prev;
+    	T val = this.pos.prev.val;
+    	this.pos.prev = this.pos.prev.prev;
+    	this.pos = this.pos.prev;
     	return val;
     } // previous()
     
     public boolean hasPrevious() {
-    	return this.prev != null;
+    	return this.pos.prev != null;
     } // hasPrevious()
     
     public void remove() throws UnsupportedOperationException {
