@@ -34,4 +34,10 @@ public class UshahidiLatLong extends DoublyLinkedList {
 		//return averages
 		return new Double[] {avLat, avLong};
 	}
+
+
+	public static DoublyLinkedList<UshahidiIncident> 
+	extractNearby(DoublyLinkedList<UshahidiIncident> incidents) throws Exception {
+		
+	}
 }
