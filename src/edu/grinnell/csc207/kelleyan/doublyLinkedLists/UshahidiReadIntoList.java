@@ -8,5 +8,14 @@ import edu.grinnell.glimmer.ushahidi.UshahidiWebClient;
 
 public class UshahidiReadIntoList {
 
+	public static DoublyLinkedList<UshahidiIncident> 
+	readIntoList(UshahidiClient incidents) throws Exception {
+		DoublyLinkedList<UshahidiIncident> dllu = 
+				new DoublyLinkedList<UshahidiIncident>();
+		while (incidents.hasMoreIncidents()) {
+			dllu.append(incidents.nextIncident());
+		}
+		return dllu;
+	}
 
 }
