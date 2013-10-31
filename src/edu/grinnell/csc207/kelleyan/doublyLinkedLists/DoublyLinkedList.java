@@ -4,19 +4,18 @@ import java.io.PrintWriter;
 import java.util.NoSuchElementException;
 import java.util.Iterator;
 
-/***
- * Mira! So I implemented most of the things we needed to do
- * for this class, but got confused when I was sleepy. I got 
- * down to swapping when I got confused. I know most of it 
- * works so far but not sure about all of them. The experiment
- * section has some basic tests that we did in class. Let me
- * know if you have any questions. I'm most likely going to
- * take the day off from this assignment tomorrow and work on
- * all my other stuff. Just hit me up if you need anything!
- ***/
 
 /**
  * Doubly linked lists.
+ *   This class implements a doubly linked list. A doubly linked list
+ *   is a list whose nodes are connected with pointers to both the next
+ *   and the previous element. This class gives you the opportunity to
+ *   use iterators like a traditional linked list, as well as cursors, a
+ *   slightly different implementation of a place holder. to iterate through
+ *   and mutate a doubly linked list.
+ * @author Mira Hall
+ * @author Andrew Kelley
+ * 
  */
 public class DoublyLinkedList<T> implements ListOf<T> {
 
@@ -88,7 +87,7 @@ public class DoublyLinkedList<T> implements ListOf<T> {
      */
     public void insert(T val, Cursor c) throws Exception {
     	DoublyLinkedListCursor<T> dllc = (DoublyLinkedListCursor<T>) c;
-    	// Special case: Empty list /// how do we check if the cursor is valid??????
+    	// Special case: Empty list
     	if (this.isEmpty()) {
     		this.dummy.next = new Node<T>(val);
     		this.dummy.next.prev = this.dummy;
