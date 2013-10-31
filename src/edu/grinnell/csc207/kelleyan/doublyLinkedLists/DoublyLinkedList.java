@@ -110,6 +110,7 @@ public class DoublyLinkedList<T> implements ListOf<T> {
     /**
      * append places a value at the end of a list
      * 
+     * @type mutator
      * @param val
      * @preCondition val is a value of type T
      * @postCondition the list now has the value val at the end
@@ -246,7 +247,7 @@ public class DoublyLinkedList<T> implements ListOf<T> {
     } // get(Cursor)
 
     /**
-     * get returns the value of the node behind the cursor (returns this -> node
+     * getPrev returns the value of the node behind the cursor (returns this -> node
      * <- cursor node)
      * 
      * @param c
@@ -268,7 +269,7 @@ public class DoublyLinkedList<T> implements ListOf<T> {
 
     /**
      * hasNext says whether or not there is an element in front of the cursor's
-     * current location
+     * current location in the list
      * 
      * @param c
      * @preCondition c is a Cursor
@@ -283,7 +284,7 @@ public class DoublyLinkedList<T> implements ListOf<T> {
 
     /**
      * hasPrev says whether or not there is an element behind the cursor's
-     * current location
+     * current location in the list
      * 
      * @param c
      * @preCondition c is a Cursor
