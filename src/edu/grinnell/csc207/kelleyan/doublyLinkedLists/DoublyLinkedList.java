@@ -7,7 +7,8 @@ import java.util.Iterator;
 /**
  * Doubly linked lists. This class implements a doubly linked list. A doubly
  * linked list is a list whose nodes are connected with pointers to both the
- * next and the previous element. This class gives you the opportunity to use
+ * next and the previous element, which allows movement forward and backwards 
+ * through the list. This class gives you the opportunity to use
  * iterators like a traditional linked list, as well as cursors, a slightly
  * different implementation of a place holder. to iterate through and mutate a
  * doubly linked list.
