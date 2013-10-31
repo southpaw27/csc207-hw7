@@ -27,8 +27,6 @@ public class Experiment {
 		if (list.isEmpty()){
 			pen.print("Empty List");
 		} else {
-			pen.print(list.get(c));
-			pen.print(" ");
 			while(list.hasPrev(c)) {
 				pen.print(list.getPrev(c));
 				pen.print(" ");
@@ -64,49 +62,114 @@ public class Experiment {
 		DoublyLinkedListIterator<Integer> ni = new DoublyLinkedListIterator<Integer>(numbers);
 
 		//advance it
-		//ni.next();
+		ni.next();
 		//create a cursor
-		DoublyLinkedListCursor<Integer> nCurs0= new DoublyLinkedListCursor<Integer>(ni.pos);
+		DoublyLinkedListCursor<Integer> nCurs0= (DoublyLinkedListCursor) numbers.front();//new DoublyLinkedListCursor<Integer>(numbers.dummy);
 		DoublyLinkedListCursor<Integer> nCurs1= new DoublyLinkedListCursor<Integer>(ni.pos);
-		pen.println("Here is cursor0 " + numbers.get(nCurs0).toString());
 
-		
+		// This shows that hasNext() and get() both work
+		pen.println("Test 1");
 		while(numbers.hasNext(nCurs0)){
 			pen.print(numbers.get(nCurs0) + " ");
 			numbers.advance(nCurs0);
-			if (nCurs0.pos.next == null) {
-				pen.print(numbers.get(nCurs0));
-			}
 		}
-//		
-//		//insert
-//		numbers.insert(new Integer(99), nCurs1);
-//
-//		printList(pen, numbers);
-//		printListReverse(pen, numbers);
-//		ni.next();
-//
-//		DoublyLinkedListCursor<Integer> nCurs2= new DoublyLinkedListCursor<Integer>(ni.pos);
-//
-//		//printList(pen, (DoublyLinkedList<Integer>) numbers.subList(nCurs1, nCurs2));
-//		pen.println("to be swapped: " + numbers.get(nCurs1) );
-//		pen.println(numbers.get(nCurs2));
-//		//numbers.delete(nCurs2);
-//		numbers.swap(nCurs1, nCurs2);
-//		printList(pen, numbers);
-//		printListReverse(pen, numbers);
-//		numbers.append(42);
-//		printList(pen, (DoublyLinkedList)numbers.select(new Equals<Integer>(new Integer(42))));
-//		printList(pen, numbers);
-//		pen.println(numbers.get(nCurs1));
-//		pen.println(numbers.get(nCurs2));
-//		DoublyLinkedListCursor<Integer> nCurs3 = nCurs1;
-//		DoublyLinkedListCursor<Integer> nCurs4 = nCurs2;
-//		pen.println(numbers.search(nCurs2, new Equals<Integer>(new Integer(42))));
-//
-//		pen.println(numbers.precedes(nCurs3, nCurs4));
-//		DoublyLinkedListCursor<Integer> nCurs5 = new DoublyLinkedListCursor<Integer>(numbers.back);
-//		pen.println(numbers.precedes(nCurs5, nCurs3));
+		
+		//Show that printList does indeed print the list
+		pen.println("\n\nTest 2");
+		printList(pen, numbers);
+		
+		// Show that both hasPrev() and getPrev() work
+		pen.println("\nTest 3");
+		printListReverse(pen, numbers);
+
+		// Insert at 42, so 99 should be before 42 and after 77.
+		pen.println("\nTest 4");
+		pen.println("nCurs1 is at: " + numbers.get(nCurs1));
+		numbers.insert(new Integer(99), nCurs1);
+		// Show insert worked correctly and linked correctly both forwards and 
+		// backwards
+		printList(pen, numbers);
+		printListReverse(pen, numbers);
+		
+		// Move the iterator forward one location
+		ni.next();
+		ni.next();
+		// Create new Cursor at new iterator position
+		DoublyLinkedListCursor<Integer> nCurs2= new DoublyLinkedListCursor<Integer>(ni.pos);
+		// Test sublist by printing the numbers between nCurs1 and nCurs2
+		pen.println("\nTest 5");
+		pen.println("nCurs1 is at: " + numbers.get(nCurs1));
+		pen.println("nCurs2 is at: " + numbers.get(nCurs2));
+		// Should be {99 42}
+		printList(pen, (DoublyLinkedList<Integer>) numbers.subList(nCurs1, nCurs2));
+		
+		// Create a Cursor at the end of the list to test sublist ending at
+		// the end
+		pen.println("\nTest 6");
+		DoublyLinkedListCursor<Integer> nCurs3= (DoublyLinkedListCursor)numbers.back();
+		pen.println("nCurs1 is at: " + numbers.get(nCurs1));
+		pen.println("nCurs3 is at: " + numbers.get(nCurs3));
+		printList(pen, (DoublyLinkedList<Integer>) numbers.subList(nCurs1, nCurs3));
+		
+		// Show that swap works
+		pen.println("\nTest 7");
+		pen.print("Original list: ");
+		printList(pen, numbers);
+		pen.println("to be swapped: " + numbers.get(nCurs1) + " and " +
+				numbers.get(nCurs2));
+		numbers.swap(nCurs1, nCurs2);
+		// Show that numbers are still linked correctly both ways and that swap
+		// worked
+		printList(pen, numbers);
+		printListReverse(pen, numbers);
+		
+		// Show that delete works
+		pen.println("\nTest 8");
+		pen.print("Original list: ");
+		printList(pen, numbers);
+		pen.println("Number to delete: " + numbers.get(nCurs2));
+		numbers.delete(nCurs2);
+		// Show that delete works and links are still good both ways
+		printList(pen, numbers);
+		printListReverse(pen, numbers);
+		
+		// Show that select works
+		// Append 42 so that there are two 42s in the list so that select
+		// will return a list of two 42s
+		pen.println("\nTest 9");
+		numbers.append(42);
+		pen.print("Original list: ");
+		printList(pen, numbers);
+		// Should return {42 42}
+		printList(pen, (DoublyLinkedList)numbers.select(new Equals<Integer>(new Integer(42))));
+		
+		// Show that search works
+		pen.println("\nTest 10");
+		// Copy nCurs4 and nCurs5 for use later in precedes test
+		DoublyLinkedListCursor<Integer> nCurs4 =
+				new DoublyLinkedListCursor<Integer>(nCurs1.prev);
+		DoublyLinkedListCursor<Integer> nCurs5 = 
+				new DoublyLinkedListCursor<Integer>(nCurs2.prev);
+		// Show where nCurs1 and nCurs2 are currently
+		pen.println("nCurs1 is at: " + numbers.get(nCurs1));
+		pen.println("nCurs2 is at: " + numbers.get(nCurs2));
+		// Show that nCurs2 will find a 42
+		pen.println(numbers.search(nCurs2, new Equals<Integer>(new Integer(42))));
+		// Show that nCurs2 will not find a 34
+		pen.println(numbers.search(nCurs2, new Equals<Integer>(new Integer(34))));
+
+		// Show that precedes works
+		pen.println("\nTest 11");
+		// Show original list
+		pen.print("Original list: ");
+		printList(pen, numbers);
+		pen.println("nCurs4 is at: " + numbers.get(nCurs4));
+		pen.println("nCurs5 is at: " + numbers.get(nCurs5));
+		// Should return true
+		pen.println(numbers.precedes(nCurs4, nCurs5));
+		// Should return false
+		pen.println(numbers.precedes(nCurs5, nCurs4));
+
 		// And we're done
 		pen.close();
 	} // main(String[])

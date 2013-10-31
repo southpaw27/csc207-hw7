@@ -61,7 +61,9 @@ public class Nearby implements PredicateTwo<Double> {
 		/*
 		 * a side note: we do not have to worry about overflow here because
 		 * the max a latitude can be is 90 degrees. 90 degrees squared times 2
-		 * is definitely less than max_int
+		 * is definitely less than max_double. Also, a max longitude of 180 
+		 * degrees squared and multiplied by 2 will also always be less than
+		 * max_double
 		 */
 	}
 }
